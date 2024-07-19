@@ -1,11 +1,11 @@
 package plugin
 
 import (
-	"airevai/ondemand-api/ond/client"
-	"airevai/ondemand-api/ond/util"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/dinson/ond-api-client-go/ond/client"
+	"github.com/dinson/ond-api-client-go/ond/util"
 	"io"
 	"net/http"
 )

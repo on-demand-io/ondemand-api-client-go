@@ -2,10 +2,10 @@
 package ond
 
 import (
-	"airevai/ondemand-api/ond/client"
-	"airevai/ondemand-api/ond/services/chat"
-	"airevai/ondemand-api/ond/services/media"
-	"airevai/ondemand-api/ond/services/plugin"
+	"github.com/dinson/ond-api-client-go/ond/client"
+	"github.com/dinson/ond-api-client-go/ond/services/chat"
+	"github.com/dinson/ond-api-client-go/ond/services/media"
+	"github.com/dinson/ond-api-client-go/ond/services/plugin"
 	"time"
 )
 

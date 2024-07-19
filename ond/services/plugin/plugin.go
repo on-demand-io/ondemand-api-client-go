@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"airevai/ondemand-api/ond/client"
 	"context"
+	"github.com/dinson/ond-api-client-go/ond/client"
 )
 
 type Plugin interface {

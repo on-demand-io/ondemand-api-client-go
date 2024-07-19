@@ -1,6 +1,6 @@
 package plugin
 
-import "airevai/ondemand-api/ond/model"
+import "github.com/dinson/ond-api-client-go/ond/model"
 
 type ListRequest struct {
 	PluginIDs []string `form:"pluginId"`

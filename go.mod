@@ -1,4 +1,4 @@
-module airevai/ondemand-api
+module github.com/dinson/ond-api-client-go
 
 go 1.22.5
 
