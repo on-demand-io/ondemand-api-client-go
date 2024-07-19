@@ -9,9 +9,7 @@ import (
 	"time"
 )
 
-type Ond interface{}
-
-type impl struct {
+type Services struct {
 	Chat   chat.Chat
 	Media  media.Media
 	Plugin plugin.Plugin
@@ -23,7 +21,7 @@ type Options struct {
 }
 
 // Init returns a new OnDemand API client
-func Init(secretKey string, opts ...*Options) Ond {
+func Init(secretKey string, opts ...*Options) *Services {
 	clientOpts := defaultClientOpts(secretKey)
 
 	if len(opts) != 0 {
@@ -31,7 +29,7 @@ func Init(secretKey string, opts ...*Options) Ond {
 		clientOpts.Retries = opts[0].Retries
 	}
 
-	return &impl{
+	return &Services{
 		Chat:   chat.New(),
 		Media:  media.New(),
 		Plugin: plugin.New(clientOpts),
