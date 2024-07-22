@@ -1,4 +1,4 @@
-package plugin
+package chat
 
 import (
 	"context"
@@ -11,15 +11,41 @@ import (
 	"net/http"
 )
 
-func (i impl) List(ctx context.Context, req *params.ListPluginParams) (*ListResponse, *errors.ErrResponse) {
-	endpoint := fmt.Sprintf(resourceURL, "list")
+func (i impl) GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse) {
+	endpoint := fmt.Sprintf(resourceURL, "/"+sessionID+"/messages/"+messageID)
 
-	if len(req.PluginIDs) != 0 {
-		req.PluginIDs = convertToCommaSeperatedString(req.PluginIDs)
+	resp, respErr := i.client.Do(ctx, i.opts, http.MethodGet, endpoint, nil)
+	if respErr != nil {
+		return nil, respErr
 	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
+	}
+
+	var result GetMessageResponse
+	if err = json.Unmarshal(body, &result); err != nil {
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
+	}
+
+	return &result, nil
+}
+
+func (i impl) ListMessages(ctx context.Context, req *params.ListMessageParams) (*ListMessagesResponse, *errors.ErrResponse) {
+	endpoint := fmt.Sprintf(resourceURL, "/"+req.SessionID+"/messages")
 
 	queryString, err := util.BuildQueryParamsString(req)
 	if err != nil {
+		fmt.Println(err)
 		return nil, &errors.ErrResponse{
 			Message:   err.Error(),
 			ErrorCode: errors.ErrAPIClientError.String(),
@@ -45,7 +71,7 @@ func (i impl) List(ctx context.Context, req *params.ListPluginParams) (*ListResp
 		}
 	}
 
-	var result ListResponse
+	var result ListMessagesResponse
 	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, &errors.ErrResponse{
 			Message:   err.Error(),
@@ -55,17 +81,4 @@ func (i impl) List(ctx context.Context, req *params.ListPluginParams) (*ListResp
 	}
 
 	return &result, nil
-}
-
-func convertToCommaSeperatedString(ds []string) []string {
-	s := ""
-
-	for i, v := range ds {
-		if i > 0 {
-			s = s + ","
-		}
-		s = s + v
-	}
-
-	return []string{s}
 }

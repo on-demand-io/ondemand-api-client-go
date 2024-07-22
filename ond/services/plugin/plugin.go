@@ -4,14 +4,15 @@ import (
 	"context"
 	"github.com/dinson/ond-api-client-go/ond/client"
 	"github.com/dinson/ond-api-client-go/ond/errors"
+	"github.com/dinson/ond-api-client-go/ond/params"
 )
 
 type Plugin interface {
-	List(ctx context.Context, req *ListRequest) (*ListResponse, *errors.ErrResponse)
+	List(ctx context.Context, req *params.ListPluginParams) (*ListResponse, *errors.ErrResponse)
 }
 
 type impl struct {
-	Opts   *client.Options
+	opts   *client.Options
 	client client.Client
 }
 
@@ -21,7 +22,7 @@ const (
 
 func New(opts *client.Options) Plugin {
 	return &impl{
-		Opts:   opts,
+		opts:   opts,
 		client: client.New(),
 	}
 }

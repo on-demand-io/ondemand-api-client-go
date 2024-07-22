@@ -6,11 +6,15 @@ import (
 	"reflect"
 )
 
-// BuildQuery creates a URL query string from a struct.
+// BuildQueryParamsString creates a URL query string from a struct.
 // It uses the "url" struct tag to determine the query parameter names.
 // All other tags will be ignored
 // It handles slices of strings in addition to other basic types.
-func BuildQuery(data interface{}) (string, error) {
+func BuildQueryParamsString(data any) (string, error) {
+	if isNil(data) {
+		return "", nil
+	}
+
 	values := url.Values{}
 	val := reflect.ValueOf(data)
 
@@ -57,4 +61,9 @@ func BuildQuery(data interface{}) (string, error) {
 	}
 
 	return values.Encode(), nil
+}
+
+func isNil(a any) bool {
+	defer func() { recover() }()
+	return a == nil || reflect.ValueOf(a).IsNil()
 }
