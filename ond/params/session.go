@@ -17,16 +17,34 @@ type CreateChatSessionParams struct {
 // ?externalUserId=ddk&sort=asc&cursor=cu&limit=10
 
 type ListSessionParams struct {
+	// ExternalUserID - Optional
+	// An identifier of the external user creating this chat session.
+	// This user is external to OnDemand but internal to your own system which can be used for filtering sessions and auditing.
+	// If not managing chat users internally, use any unique string.
 	ExternalUserID string `url:"externalUserId"`
-	Sort           Sort   `url:"sort"`
-	Limit          int32  `url:"limit"`
-	Cursor         string `url:"cursor"`
+
+	// Sort order of the sessions based on its creation time
+	Sort Sort `url:"sort"`
+
+	// Limit
+	// Specifies the total number of results to retrieve. If the provided value is less than the minimum allowed limit,
+	// it will be reset to the default value. Conversely, if the provided value exceeds the maximum allowed limit,
+	// it will be reset to the maximum value.
+	Limit int32 `url:"limit"`
+
+	// Cursor
+	// It acts as a pagination key and used to retrieve next results.
+	//For first iteration, this parameter must not be set.
+	//For subsequent iterations, it must be set to "pagination.next" value from previous response.
+	Cursor string `url:"cursor"`
 }
 
 type Sort string
 
 var (
-	SortAsc  Sort = "asc"
+	// SortAsc sorts according to ascending order of values
+	SortAsc Sort = "asc"
+	// SortDesc sorts according to descending order of values
 	SortDesc Sort = "desc"
 )
 

@@ -1,8 +1,31 @@
 package chat
 
-import "time"
+import (
+	"github.com/dinson/ond-api-client-go/ond/params"
+	"time"
+)
 
-type SubmitQueryResponse struct{}
+type SubmitQueryResponse struct {
+	Data QueryResponse `json:"data"`
+}
+
+type QueryResponse struct {
+	// SessionID
+	// id of chat session
+	SessionID string `json:"sessionId"`
+
+	// MessageID
+	// id of the chat message
+	MessageID string `json:"messageId"`
+
+	// Answer to the query
+	Answer string `json:"answer"`
+
+	// Status
+	// Current status of the chat message
+	// Values can be "processing", "completed" or "failed"
+	Status params.ChatStatus `json:"status"`
+}
 
 type GetSessionResponse struct {
 	Data SessionData `json:"data"`

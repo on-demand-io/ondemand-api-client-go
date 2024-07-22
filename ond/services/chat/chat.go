@@ -38,11 +38,6 @@ func New(opts *client.Options) Chat {
 	}
 }
 
-func (i impl) Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse) {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (i impl) GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse) {
 	//TODO implement me
 	panic("implement me")
