@@ -23,3 +23,5 @@ go.work.sum
 
 #only used for developer testing
 main.go
+
+.idea/

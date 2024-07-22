@@ -77,6 +77,10 @@ func (i impl) ListSessions(ctx context.Context, req *params.ListSessionParams) (
 		return nil, respErr
 	}
 
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, &errors.ErrResponse{
@@ -105,6 +109,10 @@ func (i impl) GetSession(ctx context.Context, sessionID string) (*GetSessionResp
 	if respErr != nil {
 		return nil, respErr
 	}
+
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
