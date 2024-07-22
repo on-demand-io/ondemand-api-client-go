@@ -10,7 +10,8 @@ type Plugin interface {
 }
 
 type impl struct {
-	Opts *client.Options
+	Opts   *client.Options
+	client client.Client
 }
 
 const (
@@ -19,6 +20,7 @@ const (
 
 func New(opts *client.Options) Plugin {
 	return &impl{
-		Opts: opts,
+		Opts:   opts,
+		client: client.New(),
 	}
 }

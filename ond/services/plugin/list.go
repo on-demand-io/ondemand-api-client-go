@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/dinson/ond-api-client-go/ond/client"
 	"github.com/dinson/ond-api-client-go/ond/util"
 	"io"
 	"net/http"
@@ -26,7 +25,7 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error)
 		endpoint = fmt.Sprintf("%s?%s", endpoint, queryString)
 	}
 
-	resp, respErr := client.Do(ctx, i.Opts, http.MethodGet, endpoint, nil)
+	resp, respErr := i.client.Do(ctx, i.Opts, http.MethodGet, endpoint, nil)
 	if respErr != nil {
 		return nil, respErr.Error()
 	}

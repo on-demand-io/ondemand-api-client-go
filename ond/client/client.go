@@ -4,41 +4,30 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/hashicorp/go-retryablehttp"
 	"io"
 	"net/http"
 	"runtime"
-	"strconv"
 	"time"
 )
 
+type Client interface {
+	Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *ErrResponse)
+}
+
+type impl struct{}
+
+func New() Client {
+	return &impl{}
+}
+
 const (
 	Charset        string        = "UTF-8"
-	DefaultTimeout time.Duration = 5 * time.Second
+	DefaultTimeout time.Duration = 10 * time.Second
 	baseURL        string        = "https://api.on-demand.io"
 )
 
-type ErrResponse struct {
-	Message   string `json:"message"`
-	ErrorCode string `json:"errorCode"`
-	Status    int
-}
-
-func (e ErrResponse) Error() error {
-	r := e.ErrorCode
-	if e.Status != 0 {
-		statusString := strconv.Itoa(e.Status)
-		r = statusString + " " + r
-	}
-	if len(e.Message) != 0 {
-		r = r + " " + e.Message
-	}
-
-	return errors.New(r)
-}
-
-func Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *ErrResponse) {
+func (i impl) Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *ErrResponse) {
 	url := baseURL + path
 
 	httpReq, err := http.NewRequestWithContext(ctx, method, url, bytes.NewBuffer(payload))
