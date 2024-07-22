@@ -6,6 +6,7 @@ import (
 	"github.com/dinson/ond-api-client-go/ond/services/chat"
 	"github.com/dinson/ond-api-client-go/ond/services/media"
 	"github.com/dinson/ond-api-client-go/ond/services/plugin"
+	"github.com/dinson/ond-api-client-go/ond/services/speech"
 	"time"
 )
 
@@ -13,6 +14,7 @@ type Services struct {
 	Chat   chat.Chat
 	Media  media.Media
 	Plugin plugin.Plugin
+	Speech speech.Speech
 }
 
 type Options struct {
@@ -33,6 +35,7 @@ func Init(secretKey string, opts ...*Options) *Services {
 		Chat:   chat.New(clientOpts),
 		Media:  media.New(clientOpts),
 		Plugin: plugin.New(clientOpts),
+		Speech: speech.New(clientOpts),
 	}
 }
 

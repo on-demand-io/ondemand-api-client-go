@@ -28,10 +28,7 @@ func (i impl) CreateSession(ctx context.Context, req *params.CreateChatSessionPa
 	}
 
 	defer func(Body io.ReadCloser) {
-		err = Body.Close()
-		if err != nil {
-
-		}
+		_ = Body.Close()
 	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
