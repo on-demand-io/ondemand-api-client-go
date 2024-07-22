@@ -1,3 +1,5 @@
+bitbucket.org/shisheodev/go-pkg v0.0.0-20240722105607-5e129e60c017 h1:g6kRL+JcvSmzv9dMzZhZTLFkxbY/DLT3mWh0E7Zmr2A=
+bitbucket.org/shisheodev/go-pkg v0.0.0-20240722105607-5e129e60c017/go.mod h1:l4dwp8QX3sV2Bc0DpYjcswUXl1tPnuJ5K1iRNa6epSg=
 github.com/hashicorp/go-cleanhttp v0.5.2 h1:035FKYIWjmULyFRBKPs8TBQoi0x6d9G4xc9neXJWAZQ=
 github.com/hashicorp/go-cleanhttp v0.5.2/go.mod h1:kO/YDlP8L1346E6Sodw+PrpBSV4/SoxCXGY6BqNFT48=
 github.com/hashicorp/go-retryablehttp v0.7.7 h1:C8hUCYzor8PIfXHa4UrZkU4VvK8o9ISHxT2Q8+VepXU=

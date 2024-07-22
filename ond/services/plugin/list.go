@@ -17,7 +17,7 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, *error
 		req.PluginIDs = convertToCommaSeperatedString(req.PluginIDs)
 	}
 
-	queryString, err := util.BuildQuery(req)
+	queryString, err := util.BuildQueryParamsString(req)
 	if err != nil {
 		return nil, &errors.ErrResponse{
 			Message:   err.Error(),
@@ -30,7 +30,7 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, *error
 		endpoint = fmt.Sprintf("%s?%s", endpoint, queryString)
 	}
 
-	resp, respErr := i.client.Do(ctx, i.Opts, http.MethodGet, endpoint, nil)
+	resp, respErr := i.client.Do(ctx, i.opts, http.MethodGet, endpoint, nil)
 	if respErr != nil {
 		return nil, respErr
 	}

@@ -30,7 +30,7 @@ func Init(secretKey string, opts ...*Options) *Services {
 	}
 
 	return &Services{
-		Chat:   chat.New(),
+		Chat:   chat.New(clientOpts),
 		Media:  media.New(),
 		Plugin: plugin.New(clientOpts),
 	}
