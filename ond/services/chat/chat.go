@@ -37,13 +37,3 @@ func New(opts *client.Options) Chat {
 		client: client.New(),
 	}
 }
-
-func (i impl) GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (i impl) ListMessages(ctx context.Context) (*ListMessagesResponse, *errors.ErrResponse) {
-	//TODO implement me
-	panic("implement me")
-}

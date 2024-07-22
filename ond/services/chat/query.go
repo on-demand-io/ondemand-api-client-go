@@ -11,7 +11,6 @@ import (
 )
 
 func (i impl) Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse) {
-	// {sessionId}/query
 	endpoint := fmt.Sprintf(resourceURL, "/"+req.SessionID+"/query")
 
 	payloadBytes, err := json.Marshal(req)
