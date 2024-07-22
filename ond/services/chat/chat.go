@@ -9,14 +9,14 @@ import (
 
 type Session interface {
 	CreateSession(ctx context.Context, req *params.CreateChatSessionParams) (*CreateSessionResponse, *errors.ErrResponse)
-	ListSessions(ctx context.Context, req *params.ListSessionsParams) (*ListSessionsResponse, *errors.ErrResponse)
+	ListSessions(ctx context.Context, req *params.ListSessionParams) (*ListSessionsResponse, *errors.ErrResponse)
+	GetSession(ctx context.Context, sessionID string) (*GetSessionResponse, *errors.ErrResponse)
 }
 
 type Chat interface {
 	Session
 
 	Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse)
-	GetSession(ctx context.Context, sessionID string) (*GetSessionResponse, *errors.ErrResponse)
 	GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse)
 	ListMessages(ctx context.Context) (*ListMessagesResponse, *errors.ErrResponse)
 }
@@ -39,11 +39,6 @@ func New(opts *client.Options) Chat {
 }
 
 func (i impl) Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (i impl) GetSession(ctx context.Context, sessionID string) (*GetSessionResponse, *errors.ErrResponse) {
 	//TODO implement me
 	panic("implement me")
 }

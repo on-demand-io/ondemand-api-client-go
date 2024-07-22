@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dinson/ond-api-client-go/ond/errors"
+	"github.com/dinson/ond-api-client-go/ond/params"
 	"github.com/dinson/ond-api-client-go/ond/util"
 	"io"
 	"net/http"
 )
 
-func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, *errors.ErrResponse) {
+func (i impl) List(ctx context.Context, req *params.ListPluginParams) (*ListResponse, *errors.ErrResponse) {
 	endpoint := fmt.Sprintf(resourceURL, "list")
 
 	if len(req.PluginIDs) != 0 {

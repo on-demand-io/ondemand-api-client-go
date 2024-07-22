@@ -4,7 +4,9 @@ import "time"
 
 type SubmitQueryResponse struct{}
 
-type GetSessionResponse struct{}
+type GetSessionResponse struct {
+	Data SessionData `json:"data"`
+}
 
 type GetMessageResponse struct{}
 

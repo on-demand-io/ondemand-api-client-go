@@ -55,7 +55,7 @@ func (i impl) CreateSession(ctx context.Context, req *params.CreateChatSessionPa
 	return &result, nil
 }
 
-func (i impl) ListSessions(ctx context.Context, req *params.ListSessionsParams) (*ListSessionsResponse, *errors.ErrResponse) {
+func (i impl) ListSessions(ctx context.Context, req *params.ListSessionParams) (*ListSessionsResponse, *errors.ErrResponse) {
 	endpoint := fmt.Sprintf(resourceURL, "")
 
 	queryString, err := util.BuildQueryParamsString(req)
@@ -87,6 +87,35 @@ func (i impl) ListSessions(ctx context.Context, req *params.ListSessionsParams) 
 	}
 
 	var result ListSessionsResponse
+	if err = json.Unmarshal(body, &result); err != nil {
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
+	}
+
+	return &result, nil
+}
+
+func (i impl) GetSession(ctx context.Context, sessionID string) (*GetSessionResponse, *errors.ErrResponse) {
+	endpoint := fmt.Sprintf(resourceURL, "/"+sessionID)
+
+	resp, respErr := i.client.Do(ctx, i.opts, http.MethodGet, endpoint, nil)
+	if respErr != nil {
+		return nil, respErr
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
+	}
+
+	var result GetSessionResponse
 	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, &errors.ErrResponse{
 			Message:   err.Error(),

@@ -16,7 +16,7 @@ type CreateChatSessionParams struct {
 
 // ?externalUserId=ddk&sort=asc&cursor=cu&limit=10
 
-type ListSessionsParams struct {
+type ListSessionParams struct {
 	ExternalUserID string `url:"externalUserId"`
 	Sort           Sort   `url:"sort"`
 	Limit          int32  `url:"limit"`
