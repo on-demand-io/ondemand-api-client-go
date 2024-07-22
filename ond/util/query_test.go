@@ -8,6 +8,11 @@ type Input struct {
 	Address string `json:"address"`
 }
 
+type InputWithSlice struct {
+	Plugins []string `url:"pluginId"`
+	Age     int      `url:"age"`
+}
+
 var (
 	input1 = Input{
 		Name: "tom",
@@ -19,6 +24,10 @@ var (
 	input3 = Input{
 		Name: "",
 		Age:  "3",
+	}
+	input4 = InputWithSlice{
+		Plugins: []string{"p1", "p2"},
+		Age:     2,
 	}
 )
 
@@ -54,6 +63,14 @@ func TestBuildQuery(t *testing.T) {
 				data: input3,
 			},
 			want:    "age=3",
+			wantErr: false,
+		},
+		{
+			name: "test 4 - slice",
+			args: args{
+				data: input4,
+			},
+			want:    "age=2&pluginId=p1&pluginId=p2",
 			wantErr: false,
 		},
 	}

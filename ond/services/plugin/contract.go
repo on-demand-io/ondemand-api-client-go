@@ -3,9 +3,9 @@ package plugin
 import "github.com/dinson/ond-api-client-go/ond/model"
 
 type ListRequest struct {
-	PluginIDs []string `form:"pluginId"`
-	Page      int      `form:"page"`
-	Limit     int      `form:"limit"`
+	PluginIDs []string `url:"pluginIds"`
+	Page      int      `url:"page"`
+	Limit     int      `url:"limit"`
 }
 
 type ListResponse struct {

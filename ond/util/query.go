@@ -9,6 +9,7 @@ import (
 // BuildQuery creates a URL query string from a struct.
 // It uses the "url" struct tag to determine the query parameter names.
 // All other tags will be ignored
+// It handles slices of strings in addition to other basic types.
 func BuildQuery(data interface{}) (string, error) {
 	values := url.Values{}
 	val := reflect.ValueOf(data)
@@ -33,7 +34,6 @@ func BuildQuery(data interface{}) (string, error) {
 			continue
 		}
 
-		// Get the query parameter name from the "url" tag
 		tag := field.Tag.Get("url")
 		if tag == "" {
 			continue // Skip if no tag is present
@@ -43,7 +43,17 @@ func BuildQuery(data interface{}) (string, error) {
 		if value.IsZero() {
 			continue
 		}
-		values.Add(tag, fmt.Sprintf("%v", value.Interface()))
+
+		switch value.Kind() {
+		case reflect.Slice:
+			if value.Type().Elem().Kind() == reflect.String {
+				for j := 0; j < value.Len(); j++ {
+					values.Add(tag, value.Index(j).String())
+				}
+			}
+		default:
+			values.Add(tag, fmt.Sprintf("%v", value.Interface()))
+		}
 	}
 
 	return values.Encode(), nil

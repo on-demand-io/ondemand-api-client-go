@@ -13,6 +13,10 @@ import (
 func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error) {
 	endpoint := fmt.Sprintf(resourceURL, "list")
 
+	if len(req.PluginIDs) != 0 {
+		req.PluginIDs = convertToCommaSeperatedString(req.PluginIDs)
+	}
+
 	queryString, err := util.BuildQuery(req)
 	if err != nil {
 		return nil, err
@@ -22,9 +26,9 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error)
 		endpoint = fmt.Sprintf("%s?%s", endpoint, queryString)
 	}
 
-	resp, err := client.Do(ctx, i.Opts, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
+	resp, respErr := client.Do(ctx, i.Opts, http.MethodGet, endpoint, nil)
+	if respErr != nil {
+		return nil, respErr.Error()
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -38,4 +42,17 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error)
 	}
 
 	return &result, nil
+}
+
+func convertToCommaSeperatedString(ds []string) []string {
+	s := ""
+
+	for i, v := range ds {
+		if i > 0 {
+			s = s + ","
+		}
+		s = s + v
+	}
+
+	return []string{s}
 }
