@@ -112,7 +112,10 @@ type MessageMedia struct {
 	Context string `json:"context"`
 }
 
-type ListMessagesResponse struct{}
+type ListMessagesResponse struct {
+	Data       []Message  `json:"data"`
+	Pagination Pagination `json:"pagination"`
+}
 
 type ListSessionsResponse struct {
 	Data       []SessionData `json:"data"`

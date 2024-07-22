@@ -18,7 +18,7 @@ type Chat interface {
 
 	Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse)
 	GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse)
-	ListMessages(ctx context.Context) (*ListMessagesResponse, *errors.ErrResponse)
+	ListMessages(ctx context.Context, req *params.ListMessageParams) (*ListMessagesResponse, *errors.ErrResponse)
 }
 
 type impl struct {
@@ -31,7 +31,6 @@ const (
 )
 
 func New(opts *client.Options) Chat {
-	// session must be created here
 	return &impl{
 		opts:   opts,
 		client: client.New(),
