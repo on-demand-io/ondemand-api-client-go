@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/dinson/ond-api-client-go/ond/errors"
 	"github.com/dinson/ond-api-client-go/ond/util"
 	"io"
 	"net/http"
 )
 
-func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error) {
+func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, *errors.ErrResponse) {
 	endpoint := fmt.Sprintf(resourceURL, "list")
 
 	if len(req.PluginIDs) != 0 {
@@ -18,7 +19,11 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error)
 
 	queryString, err := util.BuildQuery(req)
 	if err != nil {
-		return nil, err
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
 	}
 
 	if len(queryString) != 0 {
@@ -27,17 +32,25 @@ func (i impl) List(ctx context.Context, req *ListRequest) (*ListResponse, error)
 
 	resp, respErr := i.client.Do(ctx, i.Opts, http.MethodGet, endpoint, nil)
 	if respErr != nil {
-		return nil, respErr.Error()
+		return nil, respErr
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
 	}
 
 	var result ListResponse
 	if err = json.Unmarshal(body, &result); err != nil {
-		return nil, err
+		return nil, &errors.ErrResponse{
+			Message:   err.Error(),
+			ErrorCode: errors.ErrAPIClientError.String(),
+			Status:    0,
+		}
 	}
 
 	return &result, nil

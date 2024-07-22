@@ -3,10 +3,11 @@ package plugin
 import (
 	"context"
 	"github.com/dinson/ond-api-client-go/ond/client"
+	"github.com/dinson/ond-api-client-go/ond/errors"
 )
 
 type Plugin interface {
-	List(ctx context.Context, req *ListRequest) (*ListResponse, error)
+	List(ctx context.Context, req *ListRequest) (*ListResponse, *errors.ErrResponse)
 }
 
 type impl struct {

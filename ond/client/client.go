@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"github.com/dinson/ond-api-client-go/ond/errors"
 	"github.com/hashicorp/go-retryablehttp"
 	"io"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 )
 
 type Client interface {
-	Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *ErrResponse)
+	Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *errors.ErrResponse)
 }
 
 type impl struct{}
@@ -27,12 +28,12 @@ const (
 	baseURL        string        = "https://api.on-demand.io"
 )
 
-func (i impl) Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *ErrResponse) {
+func (i impl) Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *errors.ErrResponse) {
 	url := baseURL + path
 
 	httpReq, err := http.NewRequestWithContext(ctx, method, url, bytes.NewBuffer(payload))
 	if err != nil {
-		return nil, &ErrResponse{
+		return nil, &errors.ErrResponse{
 			Message:   err.Error(),
 			ErrorCode: "",
 		}
@@ -48,7 +49,7 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 
 	resp, err := httpClient.Do(httpReq)
 	if err != nil {
-		return nil, &ErrResponse{
+		return nil, &errors.ErrResponse{
 			Message:   err.Error(),
 			ErrorCode: "",
 		}
@@ -57,15 +58,15 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 	if resp.StatusCode >= http.StatusBadRequest {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, &ErrResponse{
+			return nil, &errors.ErrResponse{
 				Message:   err.Error(),
 				ErrorCode: "",
 				Status:    resp.StatusCode,
 			}
 		}
-		var errResp ErrResponse
+		var errResp errors.ErrResponse
 		if err = json.Unmarshal(body, &errResp); err != nil {
-			return nil, &ErrResponse{
+			return nil, &errors.ErrResponse{
 				Message:   err.Error(),
 				ErrorCode: "",
 				Status:    resp.StatusCode,

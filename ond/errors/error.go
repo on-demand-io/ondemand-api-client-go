@@ -1,4 +1,4 @@
-package client
+package errors
 
 import (
 	"errors"
@@ -22,4 +22,14 @@ func (e ErrResponse) Error() error {
 	}
 
 	return errors.New(r)
+}
+
+type ErrorCode string
+
+var (
+	ErrAPIClientError ErrorCode = "api_client_error"
+)
+
+func (e ErrorCode) String() string {
+	return string(e)
 }
