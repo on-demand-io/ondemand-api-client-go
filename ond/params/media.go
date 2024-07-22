@@ -4,7 +4,7 @@ type CreateMediaParams struct{}
 
 type FetchMediaParams struct {
 	// Sort
-	Sort Sort `url:"sort"`
+	Sort string `url:"sort"`
 
 	// Page number for pagination
 	// Default is 1
