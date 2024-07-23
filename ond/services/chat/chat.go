@@ -19,9 +19,8 @@ type Chat interface {
 	// Query can be used to get response for a question via sync or webhook.
 	Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse)
 	// OpenStream initiates an SSE connection with OnDemand servers.
-	OpenStream(ctx context.Context, req *params.QueryParams) (*OpenStreamResponse, *errors.ErrResponse)
-	// ConsumeStream helps to receive question responses via SSE events
-	ConsumeStream(resp *OpenStreamResponse, events chan<- Event)
+	// The response of this method should be passed to "Consume()" to start receiving the response.
+	OpenStream(ctx context.Context, req *params.QueryParams) (*StreamConsumer, *errors.ErrResponse)
 	GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse)
 	ListMessages(ctx context.Context, req *params.ListMessageParams) (*ListMessagesResponse, *errors.ErrResponse)
 }

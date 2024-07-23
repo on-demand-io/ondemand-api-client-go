@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-type OpenStreamResponse struct {
+type StreamConsumer struct {
 	HTTPResp *http.Response
 }
 
@@ -23,8 +23,6 @@ type Event struct {
 	Done  bool
 }
 
-//type Event string
-
 type EventData struct {
 	SessionID  string
 	MessageID  string
@@ -34,7 +32,7 @@ type EventData struct {
 	EventType  string
 }
 
-func (i impl) OpenStream(ctx context.Context, req *params.QueryParams) (*OpenStreamResponse, *errors.ErrResponse) {
+func (i impl) OpenStream(ctx context.Context, req *params.QueryParams) (*StreamConsumer, *errors.ErrResponse) {
 
 	req.ResponseMode = params.ResponseModeStream
 
@@ -53,19 +51,21 @@ func (i impl) OpenStream(ctx context.Context, req *params.QueryParams) (*OpenStr
 		return nil, respErr
 	}
 
-	return &OpenStreamResponse{
+	return &StreamConsumer{
 		HTTPResp: resp,
 	}, nil
 }
 
-func (i impl) ConsumeStream(resp *OpenStreamResponse, events chan<- Event) {
+// Consume helps to receive question responses via SSE events.
+// Invoke this method a go routine to prevent blocking.
+func (s StreamConsumer) Consume(events chan<- Event) {
 	defer close(events) // Close the channel when the connection ends
 
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
-	}(resp.HTTPResp.Body)
+	}(s.HTTPResp.Body)
 
-	scanner := bufio.NewScanner(resp.HTTPResp.Body)
+	scanner := bufio.NewScanner(s.HTTPResp.Body)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "event:message" || line == "" {
