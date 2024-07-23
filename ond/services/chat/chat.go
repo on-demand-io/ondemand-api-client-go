@@ -16,7 +16,12 @@ type Session interface {
 type Chat interface {
 	Session
 
+	// Query can be used to get response for a question via sync or webhook.
 	Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse)
+	// OpenStream initiates an SSE connection with OnDemand servers.
+	OpenStream(ctx context.Context, req *params.QueryParams) (*OpenStreamResponse, *errors.ErrResponse)
+	// ConsumeStream helps to receive question responses via SSE events
+	ConsumeStream(resp *OpenStreamResponse, events chan<- Event)
 	GetMessage(ctx context.Context, sessionID, messageID string) (*GetMessageResponse, *errors.ErrResponse)
 	ListMessages(ctx context.Context, req *params.ListMessageParams) (*ListMessagesResponse, *errors.ErrResponse)
 }
