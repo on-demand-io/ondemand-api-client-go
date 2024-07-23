@@ -14,6 +14,7 @@ import (
 
 type StreamConsumer struct {
 	HTTPResp *http.Response
+	Event    chan Event
 }
 
 // Event represents a single SSE event
@@ -51,15 +52,18 @@ func (i impl) OpenStream(ctx context.Context, req *params.QueryParams) (*StreamC
 		return nil, respErr
 	}
 
+	events := make(chan Event)
+
 	return &StreamConsumer{
 		HTTPResp: resp,
+		Event:    events,
 	}, nil
 }
 
 // Consume helps to receive question responses via SSE events.
-// Invoke this method a go routine to prevent blocking.
-func (s StreamConsumer) Consume(events chan<- Event) {
-	defer close(events) // Close the channel when the connection ends
+// Invoke this method as a go routine to prevent blocking.
+func (s StreamConsumer) Consume() {
+	defer close(s.Event) // Close the channel when the connection ends
 
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
@@ -75,7 +79,7 @@ func (s StreamConsumer) Consume(events chan<- Event) {
 		var eventData EventData
 
 		if line == "data:[DONE]" {
-			events <- Event{
+			s.Event <- Event{
 				Data:  eventData,
 				Error: nil,
 				Done:  true,
@@ -87,11 +91,11 @@ func (s StreamConsumer) Consume(events chan<- Event) {
 		jsonString := parsedString[1]
 
 		if err := json.Unmarshal([]byte(jsonString), &eventData); err != nil {
-			events <- Event{Error: err}
+			s.Event <- Event{Error: err}
 			break
 		}
 
-		events <- Event{
+		s.Event <- Event{
 			Data:  eventData,
 			Error: nil,
 			Done:  false,
@@ -99,6 +103,6 @@ func (s StreamConsumer) Consume(events chan<- Event) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		events <- Event{Error: err}
+		s.Event <- Event{Error: err}
 	}
 }
