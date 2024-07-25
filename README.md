@@ -105,7 +105,7 @@ func main() {
 	// create chat session
 	session, _ := ondAPIClient.Chat.CreateSession(ctx, &params.CreateChatSessionParams{...})
 	
-        // call query endpoint to receive answer to a question
+        // open connection for SSE stream
 	stream, _ := ondAPIClient.Chat.OpenStream(ctx, &params.QueryParams{...})
 
 	go stream.Consume() // start the `Consume()` in a go routine to prevent blocking
