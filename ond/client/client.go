@@ -53,7 +53,7 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 	if err != nil {
 		return nil, &errors.ErrResponse{
 			Message:   err.Error(),
-			ErrorCode: "",
+			ErrorCode: errors.ErrAPIClientError.String(),
 		}
 	}
 
@@ -62,7 +62,7 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 		if err != nil {
 			return nil, &errors.ErrResponse{
 				Message:   err.Error(),
-				ErrorCode: "",
+				ErrorCode: errors.ErrAPIClientError.String(),
 				Status:    resp.StatusCode,
 			}
 		}
@@ -70,7 +70,7 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 		if err = json.Unmarshal(body, &errResp); err != nil {
 			return nil, &errors.ErrResponse{
 				Message:   err.Error(),
-				ErrorCode: "",
+				ErrorCode: errors.ErrAPIClientError.String(),
 				Status:    resp.StatusCode,
 			}
 		}
