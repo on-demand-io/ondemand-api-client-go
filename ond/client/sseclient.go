@@ -8,28 +8,10 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 	"io"
 	"net/http"
-	"runtime"
-	"time"
 )
 
-type Client interface {
-	Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *errors.ErrResponse)
-	Subscribe(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *errors.ErrResponse)
-}
-
-type impl struct{}
-
-func New() Client {
-	return &impl{}
-}
-
-const (
-	Charset        string        = "UTF-8"
-	DefaultTimeout time.Duration = 10 * time.Second
-	baseURL        string        = "https://api.on-demand.io"
-)
-
-func (i impl) Do(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *errors.ErrResponse) {
+// Subscribe connects to the SSE endpoint and sends events through the channel
+func (i impl) Subscribe(ctx context.Context, opts *Options, method string, path string, payload []byte) (*http.Response, *errors.ErrResponse) {
 	url := baseURL + path
 
 	httpReq, err := http.NewRequestWithContext(ctx, method, url, bytes.NewBuffer(payload))
@@ -41,7 +23,7 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 	}
 
 	addHeaders(httpReq, opts.AuthKey)
-	httpReq.Header.Add("Content-Type", "application/json")
+	httpReq.Header.Add("Content-Type", "text/event-stream")
 
 	retryableClient := retryablehttp.NewClient()
 	retryableClient.RetryMax = opts.Retries
@@ -81,13 +63,4 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 	}
 
 	return resp, nil
-}
-
-func addHeaders(httpReq *http.Request, secret string) {
-	httpReq.Header.Add("Accept-Charset", Charset)
-	httpReq.Header.Add("Accept", "application/json")
-	httpReq.Header.Add("User-Agent", "OnDemand-Go-Client")
-	httpReq.Header.Add("Lang-Version", runtime.Version())
-	httpReq.Header.Add("OS-Version", runtime.GOOS+" "+runtime.GOARCH)
-	httpReq.Header.Add("apikey", secret)
 }

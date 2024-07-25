@@ -11,6 +11,10 @@ import (
 )
 
 func (i impl) Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse) {
+	return i.query(ctx, req)
+}
+
+func (i impl) query(ctx context.Context, req *params.QueryParams) (*SubmitQueryResponse, *errors.ErrResponse) {
 	endpoint := fmt.Sprintf(resourceURL, "/"+req.SessionID+"/query")
 
 	payloadBytes, err := json.Marshal(req)
@@ -27,10 +31,7 @@ func (i impl) Query(ctx context.Context, req *params.QueryParams) (*SubmitQueryR
 	}
 
 	defer func(Body io.ReadCloser) {
-		err = Body.Close()
-		if err != nil {
-
-		}
+		_ = Body.Close()
 	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
