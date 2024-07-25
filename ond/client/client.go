@@ -45,6 +45,7 @@ func (i impl) Do(ctx context.Context, opts *Options, method string, path string,
 
 	retryableClient := retryablehttp.NewClient()
 	retryableClient.RetryMax = opts.Retries
+	retryableClient.Logger = nil
 
 	httpClient := retryableClient.StandardClient() // convert retryable http client to standard http client
 	httpClient.Timeout = opts.HTTPTimeout
