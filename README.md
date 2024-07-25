@@ -20,7 +20,7 @@ Install the latest version of the library with the following commands:
 
 ## Use the library
 
-Some examples on how to use the client library is listed below:
+Some examples on how to use the client library are listed below:
 
 ### Initialise the API client
 
@@ -36,7 +36,7 @@ func main() {
 }
 ```
 
-### Use Chat API
+### Chat API
 
 Chat API supports sync, webhook and streaming response modes. You can choose between sync and webhook modes by passing the appropriate values in the `params.QueryParams.ResponseMode` field when calling the `chat.Query()` method.
 
