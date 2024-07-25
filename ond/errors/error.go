@@ -12,6 +12,10 @@ type ErrResponse struct {
 }
 
 func (e ErrResponse) Error() error {
+	if len(e.ErrorCode) == 0 {
+		return nil
+	}
+
 	r := e.ErrorCode
 	if e.Status != 0 {
 		statusString := strconv.Itoa(e.Status)
