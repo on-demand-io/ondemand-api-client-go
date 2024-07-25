@@ -62,7 +62,7 @@ func (i impl) OpenStream(ctx context.Context, req *params.QueryParams) (*StreamC
 
 // Consume helps to receive question responses via SSE events.
 // Invoke this method as a go routine to prevent blocking.
-func (s StreamConsumer) Consume() {
+func (s *StreamConsumer) Consume() {
 	defer close(s.EventChan) // Close the channel when the connection ends
 
 	defer func(Body io.ReadCloser) {
