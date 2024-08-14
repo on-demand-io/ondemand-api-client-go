@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/dinson/ond-api-client-go/ond/errors"
-	"github.com/hashicorp/go-retryablehttp"
 	"io"
 	"net/http"
 	"runtime"
 	"time"
+
+	"github.com/dinson/ond-api-client-go/ond/errors"
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type Client interface {
