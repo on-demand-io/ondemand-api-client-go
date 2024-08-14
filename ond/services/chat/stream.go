@@ -20,7 +20,7 @@ type StreamConsumer struct {
 // Event represents a single SSE event
 type Event struct {
 	Data  EventData
-	Error error
+	Error *errors.ErrResponse
 	Done  bool
 }
 
@@ -85,13 +85,39 @@ func (s *StreamConsumer) Consume() {
 				Done:  true,
 			}
 			break
-		}
+		} else if strings.HasPrefix(line, "data:[ERROR]:") {
+			parsedString := strings.Split(line, "data:[ERROR]:")
+			jsonString := parsedString[1]
 
+			var errResp errors.ErrResponse
+			if err := json.Unmarshal([]byte(jsonString), &errResp); err != nil {
+				s.EventChan <- Event{
+					Error: &errors.ErrResponse{
+						Message:   err.Error(),
+						ErrorCode: errors.ErrAPIClientError.String(),
+						Status:    0,
+					},
+				}
+				break
+			}
+
+			s.EventChan <- Event{
+				Error: &errResp,
+			}
+			break
+		}
+		
 		parsedString := strings.Split(line, "data:")
 		jsonString := parsedString[1]
 
 		if err := json.Unmarshal([]byte(jsonString), &eventData); err != nil {
-			s.EventChan <- Event{Error: err}
+			s.EventChan <- Event{
+				Error: &errors.ErrResponse{
+					Message:   err.Error(),
+					ErrorCode: errors.ErrAPIClientError.String(),
+					Status:    0,
+				},
+			}
 			break
 		}
 
@@ -103,6 +129,12 @@ func (s *StreamConsumer) Consume() {
 	}
 
 	if err := scanner.Err(); err != nil {
-		s.EventChan <- Event{Error: err}
+		s.EventChan <- Event{
+			Error: &errors.ErrResponse{
+				Message:   err.Error(),
+				ErrorCode: errors.ErrAPIClientError.String(),
+				Status:    0,
+			},
+		}
 	}
 }
