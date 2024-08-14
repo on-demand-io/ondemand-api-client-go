@@ -105,26 +105,26 @@ func (s *StreamConsumer) Consume() {
 				Error: &errResp,
 			}
 			break
-		} else {
-			parsedString := strings.Split(line, "data:")
-			jsonString := parsedString[1]
+		}
+		
+		parsedString := strings.Split(line, "data:")
+		jsonString := parsedString[1]
 
-			if err := json.Unmarshal([]byte(jsonString), &eventData); err != nil {
-				s.EventChan <- Event{
-					Error: &errors.ErrResponse{
-						Message:   err.Error(),
-						ErrorCode: errors.ErrAPIClientError.String(),
-						Status:    0,
-					},
-				}
-				break
-			}
-
+		if err := json.Unmarshal([]byte(jsonString), &eventData); err != nil {
 			s.EventChan <- Event{
-				Data:  eventData,
-				Error: nil,
-				Done:  false,
+				Error: &errors.ErrResponse{
+					Message:   err.Error(),
+					ErrorCode: errors.ErrAPIClientError.String(),
+					Status:    0,
+				},
 			}
+			break
+		}
+
+		s.EventChan <- Event{
+			Data:  eventData,
+			Error: nil,
+			Done:  false,
 		}
 	}
 
